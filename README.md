@@ -1,1 +1,0 @@
-# nf3-nh3-simulation
