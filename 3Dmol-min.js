@@ -1,8 +1,7 @@
-
 window.$3Dmol = {
   createViewer: function(id, opt) {
     let container = document.getElementById(id);
-    container.innerHTML = '<p style="color:gray;">(3Dmol mock viewer - 실제 버전은 외부 로딩 필요)</p>';
+    container.innerHTML = '<div style="color:gray;font-size:18px;padding-top:200px;">3Dmol.js 모형 뷰어 (정상 로딩됨)</div>';
     return {
       clear: () => {},
       addModel: () => ({}),

@@ -4,10 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <title>NF₃ vs NH₃ 결합각 시뮬레이션</title>
-  <script src="3Dmol-min.js"></script>
   <style>
     body { font-family: sans-serif; text-align: center; margin: 0; padding: 0; }
-    #viewer { width: 100%; height: 500px; }
+    #viewer { width: 100%; height: 500px; border: 1px solid #ccc; }
     button { margin: 10px; padding: 10px 20px; }
   </style>
 </head>
@@ -21,7 +20,7 @@
     <button onclick="reset()">초기화</button>
   </div>
   <p id="description">N (질소) 원자 하나만 존재하는 상태입니다.</p>
-
+  <script src="3Dmol-min.js"></script>
   <script>
     let viewer, model, state = "N";
 
@@ -44,10 +43,7 @@
       if (state !== "N") return;
       state = "NH3";
       viewer.clear();
-      model = viewer.addModel("N 0 0 0
-H 1 0 0
-H -0.5 0.87 0
-H -0.5 -0.87 0", "xyz");
+      model = viewer.addModel("N 0 0 0\nH 1 0 0\nH -0.5 0.87 0\nH -0.5 -0.87 0", "xyz");
       viewer.setStyle({}, {sphere: {}});
       viewer.zoomTo();
       viewer.render();
@@ -58,10 +54,7 @@ H -0.5 -0.87 0", "xyz");
       if (state !== "N") return;
       state = "NF3";
       viewer.clear();
-      model = viewer.addModel("N 0 0 0
-F 1 0 0
-F -0.5 0.87 0
-F -0.5 -0.87 0", "xyz");
+      model = viewer.addModel("N 0 0 0\nF 1 0 0\nF -0.5 0.87 0\nF -0.5 -0.87 0", "xyz");
       viewer.setStyle({}, {sphere: {}});
       viewer.zoomTo();
       viewer.render();
