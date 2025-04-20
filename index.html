@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>질소 기반 분자 조립 시뮬레이터</title>
+  <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; text-align: center; padding: 20px; }
+    h1 { color: #2c3e50; }
+    #viewer { width: 100%; height: 400px; margin-top: 20px; border: 1px solid #ccc; }
+    button {
+      margin: 10px; padding: 10px 16px; font-size: 16px;
+      border-radius: 8px; border: none;
+      background: #3498db; color: white; cursor: pointer;
+    }
+    button:hover { background: #2980b9; }
+    .info {
+      margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;
+      background: white; padding: 20px;
+      border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>질소 기반 분자 조립 시뮬레이터</h1>
+  <div>
+    <button onclick="addAtom('H')">H 추가</button>
+    <button onclick="addAtom('F')">F 추가</button>
+    <button onclick="reset()">초기화</button>
+  </div>
+  <div id="viewer"></div>
+  <div class="info" id="infoBox">N (질소) 원자 하나만 존재하는 상태입니다.</div>
+
+  <script>
+    let viewer = $3Dmol.createViewer("viewer", { backgroundColor: "white" });
+    let state = { H: 0, F: 0 };
+
+    const structures = {
+      N: `N 0.000 0.000 0.000`,
+      NH: `N 0.000 0.000 0.000
+           H 0.9428 0.0000 0.3333`,
+      NH2: `N 0.000 0.000 0.000
+            H 0.9428 0.0000 0.3333
+            H -0.4714 0.8165 0.3333`,
+      NH3: `N 0.000 0.000 0.000
+            H 0.9428 0.0000 0.3333
+            H -0.4714 0.8165 0.3333
+            H -0.4714 -0.8165 0.3333`,
+      NF: `N 0.000 0.000 0.000
+           F 0.9428 0.0000 0.3333`,
+      NF2: `N 0.000 0.000 0.000
+            F 0.9428 0.0000 0.3333
+            F -0.4714 0.8165 0.3333`,
+      NF3: `N 0.000 0.000 0.000
+            F 0.9428 0.0000 0.3333
+            F -0.4714 0.8165 0.3333
+            F -0.4714 -0.8165 0.3333`
+    };
+
+    function renderStructure(key) {
+      viewer.clear();
+      viewer.addModel(structures[key], "xyz");
+      viewer.setStyle({}, { stick: {}, sphere: { scale: 0.3 } });
+      viewer.zoomTo();
+      viewer.render();
+    }
+
+    function updateInfo() {
+      const info = document.getElementById("infoBox");
+      if (state.F > 0 && state.H > 0) {
+        info.innerHTML = "수소와 플루오린을 동시에 붙일 수 없습니다.";
+        return;
+      }
+      if (state.F === 0 && state.H === 0) {
+        renderStructure("N");
+        info.innerHTML = "N (질소) 원자 하나만 존재하는 상태입니다.";
+      } else if (state.H > 0 && state.H <= 3) {
+        renderStructure("NH" + state.H);
+        info.innerHTML = `NH<sub>${state.H}</sub> 상태입니다.` + (state.H === 3 ? " (암모니아, 결합각 약 107°)" : "");
+      } else if (state.F > 0 && state.F <= 3) {
+        renderStructure("NF" + state.F);
+        info.innerHTML = `NF<sub>${state.F}</sub> 상태입니다.` + (state.F === 3 ? " (삼불화질소, 결합각 약 102.5°, 벤트의 규칙 적용)" : "");
+      }
+    }
+
+    function addAtom(type) {
+      if (type === 'H' && state.F === 0 && state.H < 3) {
+        state.H++;
+      } else if (type === 'F' && state.H === 0 && state.F < 3) {
+        state.F++;
+      }
+      updateInfo();
+    }
+
+    function reset() {
+      state.H = 0;
+      state.F = 0;
+      updateInfo();
+    }
+
+    // 최초 로딩 시 N만 보여줌
+    updateInfo();
+  </script>
+</body>
+</html>
